@@ -4,141 +4,307 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ARS SAP Evaluation Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --line: #d1d5db;
-      --text: #111827;
-      --muted: #6b7280;
-      --accent: #5b21b6;
-      --accent-2: #ede9fe;
-      --danger: #991b1b;
-      --ok: #065f46;
-      --warn: #92400e;
-      --soft: #f9fafb;
+      --bg:         #f0f0f0;
+      --card:       #ffffff;
+      --line:       #d8d8d8;
+      --line-dark:  #b0b0b0;
+      --text:       #111111;
+      --muted:      #777777;
+      --accent:     #111111;
+      --silver:     #e8e8e8;
+      --silver-mid: #c8c8c8;
+      --silver-dark:#9a9a9a;
+      --soft:       #f7f7f7;
+      --danger:     #7a1a1a;
+      --ok:         #1a4a30;
+      --warn:       #6a4200;
+      --radius:     4px;
+      --radius-lg:  8px;
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Arial, Helvetica, sans-serif; }
-    body { padding: 20px; }
-    .wrap { max-width: 1200px; margin: 0 auto; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Figtree', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    body { padding: 24px 20px 60px; }
+    .wrap { max-width: 1160px; margin: 0 auto; }
+
+    /* ── Toolbar ── */
     .toolbar {
       position: sticky; top: 0; z-index: 1000;
-      background: rgba(243,244,246,.96); backdrop-filter: blur(8px);
-      padding: 12px 0 16px; margin-bottom: 16px;
-      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+      background: rgba(240,240,240,0.97); backdrop-filter: blur(10px);
+      padding: 11px 0 13px; margin-bottom: 20px;
+      display: flex; flex-wrap: wrap; gap: 7px; align-items: center;
+      border-bottom: 2px solid var(--accent);
     }
-    button { border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; background: var(--accent); color: #fff; }
-    button.secondary { background: #374151; }
-    button.ghost { background: #e5e7eb; color: #111827; }
-    button.danger { background: var(--danger); }
-    button.success { background: #065f46; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .status { color: var(--muted); font-size: 14px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 8px 22px rgba(0,0,0,.04); padding: 18px; margin-bottom: 18px; }
-    .title h1 { margin: 0 0 6px; font-size: 28px; }
-    .title p { margin: 3px 0; color: var(--muted); }
-    .section-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 2px solid var(--accent-2); padding-bottom: 8px; margin-bottom: 16px; }
-    .section-title h2 { margin: 0; font-size: 22px; color: var(--accent); }
-    .section-title small { color: var(--muted); }
-    .grid { display: grid; gap: 12px; }
-    .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .field label, .field legend { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
-    .field input[type="text"], .field input[type="date"], .field input[type="number"],
-    .field textarea, .field select { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 14px; background: #fff; color: #111827; }
-    .field textarea { min-height: 90px; resize: vertical; }
-    fieldset.field { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 0; }
-    .check-group, .radio-group { display: grid; gap: 8px 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-    .check-group.compact, .radio-group.compact { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
-    .option { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; }
-    .inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .muted { color: var(--muted); }
-    .subtle { background: #f9fafb; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
-    .score-box { background: #faf5ff; border: 1px solid #ddd6fe; border-radius: 14px; padding: 14px; }
-    .score-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-    .score-item { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
-    .score-item strong { display: block; font-size: 24px; color: var(--accent); margin-top: 4px; }
-    .result-good { color: var(--ok); font-weight: 700; }
-    .result-warn { color: var(--warn); font-weight: 700; }
-    .result-bad { color: var(--danger); font-weight: 700; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid var(--line); padding: 8px; vertical-align: top; font-size: 14px; }
-    th { background: #f9fafb; text-align: left; }
-    .instrument-table td:first-child { width: 48px; text-align: center; font-weight: 700; }
-    .instrument-table td:nth-child(3), .instrument-table td:nth-child(4) { width: 90px; text-align: center; }
-    .report-preview { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-height: 240px; font-size: 14px; line-height: 1.5; }
-    .signature-pad { border: 1px dashed #9ca3af; border-radius: 12px; background: #fff; width: 100%; height: 190px; }
+    button {
+      border: 0; border-radius: var(--radius);
+      padding: 8px 15px;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 600; font-size: 13px;
+      cursor: pointer; transition: background .15s;
+      letter-spacing: .02em;
+    }
+    button.primary   { background: var(--accent); color: #fff; }
+    button.primary:hover { background: #333; }
+    button.secondary { background: #444; color: #fff; }
+    button.secondary:hover { background: #222; }
+    button.ghost     { background: var(--silver); color: var(--text); border: 1px solid var(--line-dark); }
+    button.ghost:hover { background: var(--silver-mid); }
+    button.danger    { background: var(--danger); color: #fff; }
+    button.danger:hover { background: #5a1010; }
+    button.success   { background: var(--ok); color: #fff; }
+    button.success:hover { background: #133828; }
+    button:disabled  { opacity: 0.5; cursor: not-allowed; }
+    .status { color: var(--muted); font-size: 12px; margin-left: 6px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .card.title-card {
+      background: var(--accent);
+      color: #fff;
+      padding: 28px 32px;
+      border: none;
+    }
+    .card.title-card h1 {
+      font-size: 26px; margin: 0 0 4px;
+      font-weight: 800; letter-spacing: -.02em; color: #fff;
+    }
+    .card.title-card .tagline {
+      color: var(--silver-mid); font-weight: 500;
+      font-size: 11px; letter-spacing: .12em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .card.title-card p { margin: 3px 0; color: rgba(255,255,255,.6); font-size: 13px; }
+
+    /* ── Section Titles ── */
+    .section-title {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 18px;
+    }
+    .section-title h2 {
+      margin: 0; font-size: 13px; font-weight: 700;
+      color: var(--text); letter-spacing: .06em; text-transform: uppercase;
+    }
+    .section-title small {
+      color: var(--silver-dark); font-size: 10px;
+      letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
+    }
+
+    /* ── Grid ── */
+    .grid { display: grid; gap: 14px; }
+    .g2   { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .g3   { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .g4   { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .mt   { margin-top: 14px; }
+
+    /* ── Fields ── */
+    .field label, .field legend {
+      display: block;
+      font-weight: 600; font-size: 11px;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 5px;
+    }
+    .field input[type="text"],
+    .field input[type="date"],
+    .field input[type="number"],
+    .field textarea,
+    .field select {
+      width: 100%; border: 1px solid var(--line-dark);
+      border-radius: var(--radius);
+      padding: 9px 11px; font-size: 14px;
+      font-family: 'Figtree', sans-serif;
+      background: #fff; color: var(--text);
+      transition: border-color .12s, box-shadow .12s;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(17,17,17,.1);
+    }
+    .field textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
+    .field input[readonly] { background: var(--soft); color: var(--muted); }
+    fieldset.field {
+      border: 1px solid var(--line); border-radius: var(--radius-lg);
+      padding: 14px 16px; margin: 0;
+    }
+
+    /* ── Check / Radio ── */
+    .check-group, .radio-group {
+      display: grid; gap: 8px 12px;
+      grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+    }
+    .check-group.compact, .radio-group.compact {
+      grid-template-columns: repeat(auto-fit, minmax(110px,1fr));
+    }
+    .option { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+    .option input { margin-top: 3px; accent-color: var(--accent); }
+
+    /* ── Score Box ── */
+    .score-box {
+      background: var(--soft); border: 1px solid var(--line);
+      border-radius: var(--radius-lg); padding: 18px;
+    }
+    .score-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+    .score-item {
+      background: #fff; border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 14px;
+    }
+    .score-item .score-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--silver-dark);
+    }
+    .score-item strong {
+      display: block; font-size: 30px; font-weight: 800;
+      color: var(--accent); margin: 4px 0 2px;
+    }
+    .result-good { color: var(--ok);     font-weight: 700; font-size: 12px; }
+    .result-warn { color: var(--warn);   font-weight: 700; font-size: 12px; }
+    .result-bad  { color: var(--danger); font-weight: 700; font-size: 12px; }
+    .muted       { color: var(--muted);  font-size: 12px; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; vertical-align: top; }
+    th {
+      background: var(--soft); font-weight: 700; font-size: 10px;
+      letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+    }
+    tr:nth-child(even) td { background: #fcfcfc; }
+    .instrument-table td:first-child { width: 40px; text-align: center; font-weight: 800; }
+    .instrument-table td:nth-child(3),
+    .instrument-table td:nth-child(4) { width: 72px; text-align: center; }
+    .instrument-table td:last-child   { width: 100px; color: var(--muted); font-size: 11px; }
+
+    /* ── Report Preview ── */
+    .report-preview {
+      white-space: pre-wrap;
+      background: var(--soft); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 20px;
+      min-height: 220px; font-size: 13.5px; line-height: 1.75;
+      color: var(--text); font-family: 'Figtree', sans-serif;
+    }
+
+    /* ── Signature ── */
+    .signature-pad {
+      border: 1px solid var(--line-dark); border-radius: var(--radius);
+      background: #fff; width: 100%; height: 175px; display: block;
+    }
     .sig-tools { display: flex; gap: 8px; margin-top: 8px; }
-    .tiny { font-size: 12px; color: var(--muted); }
-    .footer-note { font-size: 12px; color: #4b5563; line-height: 1.5; }
+
+    /* ── Subtle / summary ── */
+    .subtle {
+      background: var(--soft); border: 1px solid var(--line);
+      border-left: 3px solid var(--silver-mid);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; color: var(--text); line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    /* ── Divider ── */
+    .divider-label {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0 16px;
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--silver-dark);
+    }
+    .divider-label::before, .divider-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--line);
+    }
+
+    /* ── Footer ── */
+    .footer-note {
+      font-size: 12px; color: var(--muted); line-height: 1.6;
+      margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+    }
+
+    .inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .hidden-print { display: block; }
-    .print-note { display: none; }
-    .page-break { page-break-before: always; break-before: page; }
+    .print-note   { display: none; }
+    .page-break   { page-break-before: always; break-before: page; }
+
     @media (max-width: 900px) { .g2, .g3, .g4, .score-grid { grid-template-columns: 1fr; } }
+
     @media print {
-      @page { size: letter; margin: 0.4in; }
-      body { background: #fff; padding: 0; }
+      @page { size: letter; margin: 0.45in; }
+      body { background: #fff; padding: 0; font-size: 12px; }
       .toolbar, .hidden-print { display: none !important; }
-      .card { box-shadow: none; border-radius: 0; border: 1px solid #999; margin-bottom: 14px; }
-      .print-note { display: block; color: #111; font-size: 12px; margin-bottom: 8px; }
+      .card { box-shadow: none; border-radius: 0; border: 1px solid #bbb; margin-bottom: 12px; padding: 14px; }
+      .card.title-card { background: #111 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-note { display: block; color: #111; font-size: 11px; margin-bottom: 6px; }
       input, textarea, select { border: 1px solid #999 !important; }
-      .section-title h2 { color: #000; }
-      .score-box { background: #fff !important; }
+      .score-box { background: #f5f5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
 <body>
 <div class="wrap">
 
+  <!-- Toolbar -->
   <div class="toolbar hidden-print">
-    <button type="button" onclick="calculateAll()">Calculate Scores</button>
-    <button type="button" class="secondary" onclick="buildReport()">Build Report Preview</button>
-    <button type="button" class="ghost" onclick="saveDraft()">Save Draft</button>
-    <button type="button" class="ghost" onclick="loadDraft()">Load Draft</button>
-    <button type="button" class="danger" onclick="clearDraft()">Clear Saved Draft</button>
-    <button type="button" onclick="window.print()">Save / Print PDF</button>
-    <button type="button" class="success" id="sheetsBtn" onclick="saveToSheets()">💾 Save to Google Sheets</button>
-    <div class="status" id="saveStatus">Standalone file. Data saves locally in this browser.</div>
+    <button type="button" class="primary"   onclick="calculateAll()">⚡ Calculate Scores</button>
+    <button type="button" class="secondary" onclick="buildReport()">📄 Build Report</button>
+    <button type="button" class="ghost"     onclick="saveDraft()">💾 Save Draft</button>
+    <button type="button" class="ghost"     onclick="loadDraft()">📂 Load Draft</button>
+    <button type="button" class="danger"    onclick="clearDraft()">🗑 Clear Draft</button>
+    <button type="button" class="ghost"     onclick="window.print()">🖨 Print / PDF</button>
+    <button type="button" class="success"   id="sheetsBtn" onclick="saveToSheets()">☁ Save to Sheets</button>
+    <div class="status" id="saveStatus">Data saves locally in this browser.</div>
   </div>
 
   <form id="sapForm">
 
-    <div class="card title">
+    <!-- Header -->
+    <div class="card title-card">
+      <div class="tagline">Substance Abuse Professional</div>
       <h1>Addiction Recovery Solutions, PLLC</h1>
-      <p><strong>Initial SAP Evaluation – Standalone HTML</strong></p>
-      <p>Phone: 903.445.8953</p>
-      <p class="tiny print-note">Use Save / Print PDF and choose "Save as PDF" in the print dialog.</p>
+      <p><strong style="color:rgba(255,255,255,.85)">Initial SAP Evaluation</strong></p>
+      <p>📞 903.445.8953</p>
+      <p class="print-note" style="font-size:11px;color:rgba(255,255,255,.5);">Use Print / PDF → Save as PDF in the print dialog.</p>
     </div>
 
+    <!-- Client / Referral -->
     <div class="card">
-      <div class="section-title"><h2>Client / Referral Information</h2><small>Header</small></div>
+      <div class="section-title"><h2>Client &amp; Referral Information</h2><small>Header</small></div>
       <div class="grid g4">
         <div class="field"><label>Client Name</label><input name="clientName" type="text"></div>
         <div class="field"><label>Evaluation Date</label><input name="evalDate" type="date"></div>
         <div class="field"><label>SSN</label><input name="ssn" type="text"></div>
-        <div class="field"><label>DOB</label><input name="dob" type="date"></div>
+        <div class="field"><label>Date of Birth</label><input name="dob" type="date"></div>
       </div>
-      <div class="grid g3" style="margin-top:12px;">
+      <div class="grid g3 mt">
         <fieldset class="field">
-          <legend>Signed paperwork</legend>
+          <legend>Signed Paperwork</legend>
           <div class="check-group compact">
             <label class="option"><input type="checkbox" name="docsSigned" value="Statement of Understanding"> Statement of Understanding</label>
             <label class="option"><input type="checkbox" name="docsSigned" value="Consent/ROI"> Consent / ROI</label>
             <label class="option"><input type="checkbox" name="docsSigned" value="Other"> Other</label>
           </div>
         </fieldset>
-        <div class="field"><label>Other paperwork details</label><input name="docsOther" type="text"></div>
+        <div class="field"><label>Other Paperwork Details</label><input name="docsOther" type="text"></div>
         <div class="field"><label>Case / Reference #</label><input name="caseNumber" type="text"></div>
       </div>
     </div>
 
+    <!-- Assessment Reason -->
     <div class="card">
       <div class="section-title"><h2>Assessment Reason / Test / Industry</h2><small>Core Logic Inputs</small></div>
       <div class="grid g2">
         <fieldset class="field">
-          <legend>Reason for assessment</legend>
+          <legend>Reason for Assessment</legend>
           <div class="radio-group">
             <label class="option"><input type="radio" name="reason" value="Positive Test" onchange="buildReport()"> Positive Test</label>
             <label class="option"><input type="radio" name="reason" value="Self Referral" onchange="buildReport()"> Self Referral</label>
@@ -153,13 +319,13 @@
           </div>
         </fieldset>
         <div class="grid g2">
-          <div class="field"><label>Positive / violation date</label><input name="positiveTestDate" type="date" oninput="buildReport()"></div>
-          <div class="field"><label>Type of test</label><input name="typeOfTest" type="text" placeholder="Urine, BAT, Oral Fluid, etc." oninput="buildReport()"></div>
-          <div class="field"><label>Reason details</label><input name="reasonNotes" type="text" oninput="buildReport()"></div>
-          <div class="field"><label>Current employer / entity</label><input name="employer" type="text" oninput="buildReport()"></div>
+          <div class="field"><label>Positive / Violation Date</label><input name="positiveTestDate" type="date" oninput="buildReport()"></div>
+          <div class="field"><label>Type of Test</label><input name="typeOfTest" type="text" placeholder="Urine, BAT, Oral Fluid…" oninput="buildReport()"></div>
+          <div class="field"><label>Reason Details</label><input name="reasonNotes" type="text" oninput="buildReport()"></div>
+          <div class="field"><label>Current Employer / Entity</label><input name="employer" type="text" oninput="buildReport()"></div>
         </div>
       </div>
-      <div class="grid g2" style="margin-top:12px;">
+      <div class="grid g2 mt">
         <fieldset class="field">
           <legend>Industry Type</legend>
           <div class="radio-group">
@@ -173,14 +339,15 @@
             <label class="option"><input type="radio" name="industry" value="Other" onchange="buildReport()"> Other Position</label>
           </div>
         </fieldset>
-        <div class="field"><label>Other position / industry</label><input name="otherPosition" type="text" oninput="buildReport()"></div>
+        <div class="field"><label>Other Position / Industry</label><input name="otherPosition" type="text" oninput="buildReport()"></div>
       </div>
     </div>
 
+    <!-- Identified Problem -->
     <div class="card">
-      <div class="section-title"><h2>Identified Problem / Relevant Circumstances</h2><small>Substances and history</small></div>
+      <div class="section-title"><h2>Identified Problem &amp; Relevant Circumstances</h2><small>Substances &amp; History</small></div>
       <fieldset class="field">
-        <legend>Description of identified problem – check all that apply</legend>
+        <legend>Description of Identified Problem – check all that apply</legend>
         <div class="check-group">
           <label class="option"><input type="checkbox" name="identifiedProblem" value="Alcohol" onchange="buildReport()"> Alcohol</label>
           <label class="option"><input type="checkbox" name="identifiedProblem" value="Opiates" onchange="buildReport()"> Opiates</label>
@@ -198,34 +365,35 @@
           <label class="option"><input type="checkbox" name="identifiedProblem" value="Other" onchange="buildReport()"> Other</label>
         </div>
       </fieldset>
-      <div class="grid g3" style="margin-top:12px;">
-        <div class="field"><label>Alcohol – Quantity / $ spent</label><input name="alcoholQty" type="text"></div>
-        <div class="field"><label>Alcohol – First use</label><input name="alcoholFirstUse" type="text"></div>
-        <div class="field"><label>Alcohol – Last use / Frequency</label><input name="alcoholLastFrequency" type="text"></div>
+      <div class="grid g3 mt">
+        <div class="field"><label>Alcohol – Quantity / $ Spent</label><input name="alcoholQty" type="text"></div>
+        <div class="field"><label>Alcohol – First Use</label><input name="alcoholFirstUse" type="text"></div>
+        <div class="field"><label>Alcohol – Last Use / Frequency</label><input name="alcoholLastFrequency" type="text"></div>
         <div class="field"><label>Drug 1 – Name</label><input name="drug1Name" type="text"></div>
-        <div class="field"><label>Drug 1 – Quantity / $ spent</label><input name="drug1Qty" type="text"></div>
-        <div class="field"><label>Drug 1 – First use / Last use / Frequency</label><input name="drug1Details" type="text"></div>
+        <div class="field"><label>Drug 1 – Quantity / $ Spent</label><input name="drug1Qty" type="text"></div>
+        <div class="field"><label>Drug 1 – First / Last / Frequency</label><input name="drug1Details" type="text"></div>
         <div class="field"><label>Drug 2 – Name</label><input name="drug2Name" type="text"></div>
-        <div class="field"><label>Drug 2 – Quantity / $ spent</label><input name="drug2Qty" type="text"></div>
-        <div class="field"><label>Drug 2 – First use / Last use / Frequency</label><input name="drug2Details" type="text"></div>
+        <div class="field"><label>Drug 2 – Quantity / $ Spent</label><input name="drug2Qty" type="text"></div>
+        <div class="field"><label>Drug 2 – First / Last / Frequency</label><input name="drug2Details" type="text"></div>
       </div>
-      <div class="grid g2" style="margin-top:12px;">
+      <div class="grid g2 mt">
         <div class="field"><label>History of Positive Tests</label><textarea name="historyPositiveTests"></textarea></div>
         <div class="field"><label>History of DWI / DUI</label><textarea name="historyDwi"></textarea></div>
         <fieldset class="field">
-          <legend>Previous substance abuse treatment</legend>
+          <legend>Previous Substance Abuse Treatment</legend>
           <div class="radio-group compact">
             <label class="option"><input type="radio" name="previousTreatment" value="Yes"> Yes</label>
             <label class="option"><input type="radio" name="previousTreatment" value="No"> No</label>
           </div>
-          <div class="field" style="margin-top:8px;"><label>Explain if yes</label><textarea name="previousTreatmentExplain"></textarea></div>
+          <div class="field" style="margin-top:10px;"><label>Explain if Yes</label><textarea name="previousTreatmentExplain"></textarea></div>
         </fieldset>
-        <div class="field"><label>History and background of the problem</label><textarea name="problemHistory"></textarea></div>
+        <div class="field"><label>History &amp; Background of the Problem</label><textarea name="problemHistory"></textarea></div>
       </div>
     </div>
 
+    <!-- Mental Status -->
     <div class="card">
-      <div class="section-title"><h2>Mental Status / Diagnosis / Instruments</h2><small>Clinical section</small></div>
+      <div class="section-title"><h2>Mental Status / Diagnosis / Instruments</h2><small>Clinical Section</small></div>
       <div class="grid g3">
         <fieldset class="field">
           <legend>Intoxicated</legend>
@@ -237,61 +405,84 @@
         <div class="field"><label>Orientation (x3)</label><input name="orientation" type="text"></div>
         <div class="field"><label>Physical Presentation / Behavior / Affect</label><input name="physicalPresentation" type="text"></div>
       </div>
-      <div class="field" style="margin-top:12px;"><label>Comments</label><textarea name="presentationComments"></textarea></div>
-      <div class="grid g3" style="margin-top:12px;">
+      <div class="field mt"><label>Comments</label><textarea name="presentationComments"></textarea></div>
+      <div class="grid g3 mt">
         <fieldset class="field">
-          <legend>Client acknowledges a problem</legend>
+          <legend>Client Acknowledges a Problem</legend>
           <div class="radio-group compact">
             <label class="option"><input type="radio" name="ackProblem" value="Yes"> Yes</label>
             <label class="option"><input type="radio" name="ackProblem" value="No"> No</label>
           </div>
         </fieldset>
         <fieldset class="field">
-          <legend>Factors of denial evident</legend>
+          <legend>Factors of Denial Evident</legend>
           <div class="radio-group compact">
             <label class="option"><input type="radio" name="denial" value="Yes"> Yes</label>
             <label class="option"><input type="radio" name="denial" value="No"> No</label>
           </div>
         </fieldset>
-        <div class="field"><label>Denial comments</label><textarea name="denialComments"></textarea></div>
+        <div class="field"><label>Denial Comments</label><textarea name="denialComments"></textarea></div>
       </div>
-      <div class="score-box" style="margin-top:12px;">
-        <div class="section-title" style="margin-bottom:12px;"><h2 style="font-size:18px;">Instrument Scores</h2><small>Auto-calculated</small></div>
+
+      <div class="score-box mt">
+        <div class="section-title" style="margin-bottom:14px;">
+          <h2>Instrument Scores</h2><small>Auto-Calculated</small>
+        </div>
         <div class="score-grid">
-          <div class="score-item"><div>MAST Score</div><strong id="mastScore">0</strong><div id="mastInterpretation" class="muted">Not calculated</div></div>
-          <div class="score-item"><div>DAST-10 Score</div><strong id="dastScore">0</strong><div id="dastInterpretation" class="muted">Not calculated</div></div>
-          <div class="score-item"><div>Combined Flag</div><strong id="combinedFlag">—</strong><div id="combinedInterpretation" class="muted">Use clinical judgment with all findings</div></div>
-          <div class="score-item"><div>Instrument Summary</div><strong id="scoreCommentStatus">Ready</strong><div class="muted">Included below</div></div>
+          <div class="score-item">
+            <div class="score-label">MAST Score</div>
+            <strong id="mastScore">0</strong>
+            <div id="mastInterpretation" class="muted">Not calculated</div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">DAST-10 Score</div>
+            <strong id="dastScore">0</strong>
+            <div id="dastInterpretation" class="muted">Not calculated</div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">Combined Flag</div>
+            <strong id="combinedFlag">—</strong>
+            <div id="combinedInterpretation" class="muted">Use clinical judgment</div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">Summary</div>
+            <strong style="font-size:17px;" id="scoreCommentStatus">Ready</strong>
+            <div class="muted">Included in report</div>
+          </div>
         </div>
-        <div class="grid g2" style="margin-top:12px;">
-          <div class="field"><label>Instrument score summary</label><input name="instrumentSummary" type="text" readonly></div>
-          <div class="field"><label>Instrument comments</label><textarea name="instrumentComments"></textarea></div>
+        <div class="grid g2 mt">
+          <div class="field"><label>Instrument Score Summary</label><input name="instrumentSummary" type="text" readonly></div>
+          <div class="field"><label>Instrument Comments</label><textarea name="instrumentComments"></textarea></div>
         </div>
       </div>
-      <div class="grid g2" style="margin-top:12px;">
-        <div class="field"><label>Diagnosis comments</label><textarea name="diagnosisComments"></textarea></div>
-        <div class="field"><label>Current prescribed medications</label><textarea name="currentMeds"></textarea></div>
+
+      <div class="grid g2 mt">
+        <div class="field"><label>Diagnosis Comments</label><textarea name="diagnosisComments"></textarea></div>
+        <div class="field"><label>Current Prescribed Medications</label><textarea name="currentMeds"></textarea></div>
       </div>
     </div>
 
+    <!-- MAST -->
     <div class="card">
-      <div class="section-title"><h2>MAST</h2><small>Auto-scored</small></div>
+      <div class="section-title"><h2>MAST</h2><small>Auto-Scored</small></div>
       <table class="instrument-table">
         <thead><tr><th>#</th><th>Question</th><th>Yes</th><th>No</th><th>Weight</th></tr></thead>
         <tbody id="mastTable"></tbody>
       </table>
     </div>
 
+    <!-- DAST -->
     <div class="card page-break">
-      <div class="section-title"><h2>DAST-10</h2><small>Auto-scored</small></div>
+      <div class="section-title"><h2>DAST-10</h2><small>Auto-Scored</small></div>
       <table class="instrument-table">
         <thead><tr><th>#</th><th>Question</th><th>Yes</th><th>No</th><th>Score Rule</th></tr></thead>
         <tbody id="dastTable"></tbody>
       </table>
     </div>
 
+    <!-- Report Logic -->
     <div class="card">
-      <div class="section-title"><h2>Report Logic / Recommendation Builder</h2><small>Controls the final report</small></div>
+      <div class="section-title"><h2>Report Logic &amp; Recommendation Builder</h2><small>Controls the Final Report</small></div>
       <div class="grid g3">
         <fieldset class="field">
           <legend>Report Type</legend>
@@ -319,68 +510,73 @@
           </div>
         </fieldset>
       </div>
-      <div class="grid g3" style="margin-top:12px;">
+
+      <div class="grid g3 mt">
         <div class="field"><label>DER / Employer Contact Name</label><input name="derName" type="text" oninput="buildReport()"></div>
         <div class="field"><label>DER Contact Email / Fax / Phone</label><input name="derContact" type="text" oninput="buildReport()"></div>
         <div class="field"><label>Company Name</label><input name="companyName" type="text" oninput="buildReport()"></div>
       </div>
-      <div class="grid g2" style="margin-top:12px;">
+      <div class="grid g2 mt">
         <div class="field"><label>Company Address</label><textarea name="companyAddress" oninput="buildReport()" placeholder="Street, City, State ZIP"></textarea></div>
         <div class="grid g2">
           <div class="field"><label>Violation Date</label><input name="violationDate" type="date" oninput="buildReport()"></div>
-          <div class="field"><label>Violation / referral description</label><input name="violationLabel" type="text" oninput="buildReport()" placeholder="Positive random urine drug screen, refused test, self referral, etc."></div>
+          <div class="field"><label>Violation / Referral Description</label><input name="violationLabel" type="text" oninput="buildReport()" placeholder="Positive random urine drug screen, refused test, etc."></div>
           <div class="field"><label>Recipient Header / Company</label><input name="recipientHeader" type="text" oninput="buildReport()" placeholder="DISA Global Solutions, Inc."></div>
           <div class="field"><label>Recipient Attention Line</label><input name="recipientAttention" type="text" oninput="buildReport()" placeholder="Attn: Return to Duty Department"></div>
         </div>
       </div>
-      <div class="section-title" style="margin-top:18px;"><h2>Recommendation Counts</h2><small>These drive the exact report wording</small></div>
+
+      <div class="divider-label">Recommendation Counts</div>
       <div class="grid g4">
         <div class="field"><label>Education Hours</label><input name="educationHours" type="number" min="0" value="0" oninput="syncRecommendationSummary();buildReport()"></div>
         <div class="field"><label>Peer Support Groups</label><input name="peerGroupCount" type="number" min="0" value="0" oninput="syncRecommendationSummary();buildReport()"></div>
         <div class="field"><label>Counseling Sessions</label><input name="counselingSessions" type="number" min="0" value="0" oninput="syncRecommendationSummary();buildReport()"></div>
-        <div class="field"><label>Independent Negative Drug Screen Required</label>
+        <div class="field"><label>Independent Negative Screen Required</label>
           <select name="negativeScreenRequired" onchange="syncRecommendationSummary();buildReport()">
             <option value="Yes" selected>Yes</option>
             <option value="No">No</option>
           </select>
         </div>
       </div>
-      <div class="section-title" style="margin-top:18px;"><h2>Structured Recommendations</h2><small>Optional detail lines</small></div>
+
+      <div class="divider-label">Structured Recommendations</div>
       <div class="grid g3">
         <div class="field"><label>Education Recommendation Detail</label><textarea name="educationDetail" oninput="syncRecommendationSummary();buildReport()" placeholder="8-hour online drug and alcohol education"></textarea></div>
         <div class="field"><label>Peer Support Detail</label><textarea name="peerDetail" oninput="syncRecommendationSummary();buildReport()" placeholder="AA, NA, SMART, In The Rooms, etc."></textarea></div>
         <div class="field"><label>Counseling / Treatment Detail</label><textarea name="treatmentDetail" oninput="syncRecommendationSummary();buildReport()" placeholder="Individual counseling, outpatient, IOP, etc."></textarea></div>
       </div>
-      <div class="grid g2" style="margin-top:12px;">
+      <div class="grid g2 mt">
         <div class="field"><label>Recommendation Summary</label><textarea name="sapRecommendation" placeholder="Auto-built but editable"></textarea></div>
         <div class="field"><label>Additional Report Note</label><textarea name="dotReportNote" placeholder="No diagnosis or protected medical history in employer-facing reports."></textarea></div>
       </div>
-      <div class="subtle" id="recommendationSummary">No recommendations entered yet.</div>
+      <div class="subtle mt" id="recommendationSummary">No recommendations entered yet.</div>
     </div>
 
+    <!-- Report Preview -->
     <div class="card">
-      <div class="section-title"><h2>Report Preview</h2><small>Generated from your selections</small></div>
-      <div class="inline hidden-print" style="margin:12px 0 10px;">
-        <button type="button" onclick="buildReport()">Generate Report Preview</button>
+      <div class="section-title"><h2>Report Preview</h2><small>Generated from Your Selections</small></div>
+      <div class="inline hidden-print" style="margin-bottom:14px;">
+        <button type="button" class="primary" onclick="buildReport()">Generate Report Preview</button>
       </div>
       <div id="reportPreview" class="report-preview"></div>
     </div>
 
+    <!-- Signature Block -->
     <div class="card">
-      <div class="section-title"><h2>Signature Block / PDF Finalization</h2><small>Appears in print/PDF</small></div>
+      <div class="section-title"><h2>Signature Block &amp; PDF Finalization</h2><small>Appears in Print / PDF</small></div>
       <div class="grid g3">
         <div class="field"><label>SAP Full Name</label><input name="sapName" type="text" placeholder="Joshua Pair" oninput="buildReport()"></div>
         <div class="field"><label>SAP Credentials</label><input name="sapCredentials" type="text" placeholder="M.Ed., LCDC, SAP" oninput="buildReport()"></div>
         <div class="field"><label>SAP Signature Date</label><input name="sapSigDate" type="date" oninput="buildReport()"></div>
       </div>
-      <div style="margin-top:12px;">
-        <label><strong>Substance Abuse Professional Signature</strong></label>
+      <div style="margin-top:14px;">
+        <label style="font-weight:700; font-size:13px; display:block; margin-bottom:8px;">Substance Abuse Professional Signature</label>
         <canvas id="sapSignature" class="signature-pad"></canvas>
         <div class="sig-tools hidden-print">
-          <button type="button" class="ghost" onclick="clearPad('sapSignature')">Clear SAP Signature</button>
+          <button type="button" class="ghost" onclick="clearPad('sapSignature')">Clear Signature</button>
         </div>
       </div>
-      <div class="footer-note" style="margin-top:14px;">
+      <div class="footer-note">
         Employer-facing reports should stay limited to evaluation and recommendation language. Do not include diagnosis, detailed medical history, psychiatric history, or protected health information unless separately authorized and appropriate for the report type.
       </div>
     </div>
@@ -389,7 +585,6 @@
 </div>
 
 <script>
-  // ── CONFIGURATION ── paste your deployed Apps Script URL here
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS4yzK4DA96PBkqXddLSZHytYmUXv-W-NZKCIrVbTmdjbshY8cWfJGRjZqO0AZ3cSgeQ/exec';
 
   const MAST_ITEMS = [
@@ -459,7 +654,7 @@
   }
   function fmtDate(v) { if (!v) return ''; const d = new Date(v+'T00:00:00'); return isNaN(d.getTime()) ? v : d.toLocaleDateString('en-US'); }
   function safe(v, fb='') { return (v||'').toString().trim() || fb; }
-  function setStatus(msg, err) { const el = document.getElementById('saveStatus'); el.textContent = msg; el.style.color = err ? '#991b1b' : '#6b7280'; }
+  function setStatus(msg, err) { const el = document.getElementById('saveStatus'); el.textContent = msg; el.style.color = err ? '#7a1a1a' : '#777777'; }
 
   function calculateMAST() {
     let total = 0;
@@ -477,11 +672,11 @@
     let total = 0;
     DAST_ITEMS.forEach(i => { const v=getRadioValue(`dast_${i.n}`); if(!v) return; total += i.riskYes?(v==='yes'?1:0):(v==='no'?1:0); });
     let interp, cls;
-    if (total===0)      { interp='No problems reported'; cls='result-good'; }
-    else if (total<=2)  { interp='Low level';            cls='result-good'; }
-    else if (total<=5)  { interp='Moderate level';       cls='result-warn'; }
-    else if (total<=8)  { interp='Substantial level';    cls='result-bad';  }
-    else                { interp='Severe level';         cls='result-bad';  }
+    if (total===0)     { interp='No problems reported'; cls='result-good'; }
+    else if (total<=2) { interp='Low level';            cls='result-good'; }
+    else if (total<=5) { interp='Moderate level';       cls='result-warn'; }
+    else if (total<=8) { interp='Substantial level';    cls='result-bad';  }
+    else               { interp='Severe level';         cls='result-bad';  }
     document.getElementById('dastScore').textContent = total;
     const di = document.getElementById('dastInterpretation'); di.textContent=interp; di.className=cls;
     return { total, interpretation: interp };
@@ -490,9 +685,9 @@
   function calculateAll() {
     const mast=calculateMAST(), dast=calculateDAST();
     let flag, note;
-    if (mast.total>=5||dast.total>=6)                        { flag='High Concern';     note='Instrument scores suggest clinically significant substance-related risk.'; }
-    else if (mast.total===4||(dast.total>=3&&dast.total<=5)) { flag='Moderate Concern'; note='Instrument scores show a meaningful risk pattern that should be integrated into the evaluation.'; }
-    else                                                      { flag='Lower Concern';    note='Scores alone do not indicate high severity, but they do not replace clinical judgment.'; }
+    if (mast.total>=5||dast.total>=6)                        { flag='High Concern';     note='Scores suggest clinically significant substance-related risk.'; }
+    else if (mast.total===4||(dast.total>=3&&dast.total<=5)) { flag='Moderate Concern'; note='Scores show a meaningful risk pattern; integrate into evaluation.'; }
+    else                                                      { flag='Lower Concern';    note='Scores alone do not indicate high severity; clinical judgment required.'; }
     document.getElementById('combinedFlag').textContent = flag;
     document.getElementById('combinedInterpretation').textContent = note;
     document.querySelector('[name="instrumentSummary"]').value = `MAST: ${mast.total} (${mast.interpretation}); DAST-10: ${dast.total} (${dast.interpretation})`;
@@ -500,201 +695,251 @@
   }
 
   function syncRecommendationSummary() {
-    const edu=parseInt(document.querySelector('[name="educationHours"]').value||'0',10)||0;
-    const peer=parseInt(document.querySelector('[name="peerGroupCount"]').value||'0',10)||0;
-    const couns=parseInt(document.querySelector('[name="counselingSessions"]').value||'0',10)||0;
-    const scr=document.querySelector('[name="negativeScreenRequired"]').value||'Yes';
-    const ed=document.querySelector('[name="educationDetail"]').value.trim();
-    const pd=document.querySelector('[name="peerDetail"]').value.trim();
-    const td=document.querySelector('[name="treatmentDetail"]').value.trim();
-    const s=[
-      `Education: ${edu} hour(s)${ed?` — ${ed}`:''}`,
-      `Peer support: ${peer} group(s)${pd?` — ${pd}`:''}`,
-      `Counseling / treatment: ${couns} session(s)${td?` — ${td}`:''}`,
-      `Independent negative drug screen required: ${scr}`
-    ].join('\n');
-    document.getElementById('recommendationSummary').textContent = s;
-    const box=document.querySelector('[name="sapRecommendation"]');
-    if (!box.dataset.userEdited||box.dataset.userEdited==='false') box.value=s;
+    const edu   = parseInt(document.querySelector('[name="educationHours"]').value||'0',10)||0;
+    const peer  = parseInt(document.querySelector('[name="peerGroupCount"]').value||'0',10)||0;
+    const couns = parseInt(document.querySelector('[name="counselingSessions"]').value||'0',10)||0;
+    const scr   = document.querySelector('[name="negativeScreenRequired"]').value||'Yes';
+    const ed = document.querySelector('[name="educationDetail"]').value.trim();
+    const pd = document.querySelector('[name="peerDetail"]').value.trim();
+    const td = document.querySelector('[name="treatmentDetail"]').value.trim();
+    const lines = [];
+    if (edu  > 0) lines.push(`Education: ${edu} hour(s)${ed ? ` — ${ed}` : ''}`);
+    if (peer > 0) lines.push(`Peer support: ${peer} group(s)${pd ? ` — ${pd}` : ''}`);
+    if (couns> 0) lines.push(`Counseling / treatment: ${couns} session(s)${td ? ` — ${td}` : ''}`);
+    lines.push(`Independent negative drug screen required: ${scr}`);
+    const s = lines.join('\n');
+    document.getElementById('recommendationSummary').textContent = s || 'No recommendations entered yet.';
+    const box = document.querySelector('[name="sapRecommendation"]');
+    if (!box.dataset.userEdited || box.dataset.userEdited==='false') box.value = s;
   }
 
-  function resourceSectionText() {
-    return `Recommendation Resources:
+  // ── Resource section — CONDITIONAL, minimum 2 options per category ──
+  function resourceSectionText(edu, peer, cns) {
+    const sections = [];
 
-Peer Support Groups
+    // Peer support — only if peer > 0
+    if (peer > 0) {
+      sections.push(`Peer Support Groups
 1. https://www.intherooms.com/home/
 2. Adult Children of Alcoholics: Find a Meeting
 3. Marijuana Anonymous: Find a Meeting
 4. Narcotics Anonymous: Find a Meeting
-5. Alcoholics Anonymous: Find a Meeting
+5. Alcoholics Anonymous: Find a Meeting`);
+    }
 
-4 Hour Online Drug & Alcohol Education
-1. Substance Abuse 4-Hour Nationwide Online Certified Course
-   https://ncoei.thinkific.com/courses/4-hour-drugs-alcohol-awareness-mandated-programs-thinkific?ref=f143ad
-
-8 Hour Online Drug & Alcohol Education
-1. Substance Abuse 8-Hour Nationwide Online Certified Course
-   https://ncoei.thinkific.com/courses/mp-8-hour-substance-abuse-drugs-alcohol-awareness-prescription-street-drugs-cannabis-vaping-supportive-intervention-addiction-dependence-risk-prevention-education-safety-first?ref=f143ad
-
-12 Hour Online Drug & Alcohol Education
-1. Substance Abuse 12-Hour Nationwide Online Certified Course
-   https://ncoei.thinkific.com/courses/mp-12-hour-drugs-alcohol-awareness-including-prescription-street-drugs-cannabis-and-vaping-supportive-intervention-for-substance-abuse-addiction-dependence-prevention-risk-prevention-education-for-safety-first-awareness?ref=f143ad
-
-16 Hour Online Drug & Alcohol Education
-1. Substance Abuse 16-Hour Nationwide Online Certified Course
-   https://ncoei.thinkific.com/courses/mp-16-hour-drugs-alcohol-awareness-including-prescription-street-drugs-cannabis-and-vaping-supportive-intervention-for-substance-abuse-addiction-dependence-prevention-risk-prevention-education-for-safety-first-awareness?ref=f143ad
-
-20 Hour Online Drug & Alcohol Education
-1. Substance Abuse 20-Hour Nationwide Online Certified Course
-   https://ncoei.thinkific.com/courses/mp-20-hour-drugs-alcohol-substance-abuse-behavior-modification-including-prescription-street-drugs-cannabis-and-vaping-supportive-intervention-for-substance-abuse-addiction-dependence-risk-prevention-education-for-safety-first-awareness?ref=f143ad
-
-32 Hour Outpatient Clinical Treatment Program
-1. US DOT SAP 32-Hour Substance Abuse Outpatient Clinical Treatment Program
-   https://ncoei.thinkific.com/courses/corepso-us-dot-sap-32-hour-16-weeks-substance-abuse-outpatient-clinical-treatment-program-drugs-alcohol-addiction-dependence-recovery-and-relapse-cannabis-vaping-prescription-street-drugs?ref=f143ad
+    // Education — matching hour block, always 2 links (ncoei + riskpreventiononline)
+    if (edu === 4) {
+      sections.push(`4 Hour Online Drug & Alcohol Education
+1. https://ncoei.thinkific.com/courses/4-hour-drugs-alcohol-awareness-mandated-programs-thinkific?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    } else if (edu === 8) {
+      sections.push(`8 Hour Online Drug & Alcohol Education
+1. https://ncoei.thinkific.com/courses/mp-8-hour-substance-abuse-drugs-alcohol-awareness-prescription-street-drugs-cannabis-vaping-supportive-intervention-addiction-dependence-risk-prevention-education-safety-first?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    } else if (edu === 12) {
+      sections.push(`12 Hour Online Drug & Alcohol Education
+1. https://ncoei.thinkific.com/courses/mp-12-hour-drugs-alcohol-awareness-including-prescription-street-drugs-cannabis-and-vaping-supportive-intervention-for-substance-abuse-addiction-dependence-prevention-risk-prevention-education-for-safety-first-awareness?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    } else if (edu === 16) {
+      sections.push(`16 Hour Online Drug & Alcohol Education
+1. https://ncoei.thinkific.com/courses/mp-16-hour-drugs-alcohol-awareness-including-prescription-street-drugs-cannabis-and-vaping-supportive-intervention-for-substance-abuse-addiction-dependence-prevention-risk-prevention-education-for-safety-first-awareness?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    } else if (edu === 20) {
+      sections.push(`20 Hour Online Drug & Alcohol Education
+1. https://ncoei.thinkific.com/courses/mp-20-hour-drugs-alcohol-substance-abuse-behavior-modification-including-prescription-street-drugs-cannabis-and-vaping-supportive-intervention-for-substance-abuse-addiction-dependence-risk-prevention-education-for-safety-first-awareness?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    } else if (edu === 32) {
+      sections.push(`32 Hour Outpatient Clinical Treatment Program
+1. https://ncoei.thinkific.com/courses/corepso-us-dot-sap-32-hour-16-weeks-substance-abuse-outpatient-clinical-treatment-program-drugs-alcohol-addiction-dependence-recovery-and-relapse-cannabis-vaping-prescription-street-drugs?ref=f143ad
+2. https://www.riskpreventiononline.com
 
 32 Hour Supportive Outpatient Programming
-1. NCOEI 32-Hour SOP Drug Offender Impact Education
-   https://ncoei.thinkific.com/courses/ncoei-32-hour-sop-supportive-outpatient-programming-drug-offender-impact-education-drugs-alcohol-cannabis-prescription-street-drugs-substance-abuse-addiction-and-dependence-intervention?ref=f143ad
+1. https://ncoei.thinkific.com/courses/ncoei-32-hour-sop-supportive-outpatient-programming-drug-offender-impact-education-drugs-alcohol-cannabis-prescription-street-drugs-substance-abuse-addiction-and-dependence-intervention?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    } else if (edu > 0) {
+      sections.push(`${edu} Hour Online Drug & Alcohol Education
+1. https://ncoei.thinkific.com/home?ref=f143ad
+2. https://www.riskpreventiononline.com`);
+    }
 
-Counseling
+    // Counseling — only if cns > 0
+    if (cns > 0) {
+      sections.push(`Counseling
 1. Robert Unegbu, DSW, LCDC: 903.245.4753
 2. Savannah Daniel, LCDC: 903.315.0103
 3. Susan Freeman, LCSW, SAP: 903.720.8807
 4. Melissa Huston, LCSW-S, CRC, LCDC, SAP: 903.806.3547
-5. Ashley Long, LCDC, LPC-A, ADC, CART: 430.280.9381`;
+5. Ashley Long, LCDC, LPC-A, ADC, CART: 430.280.9381`);
+    }
+
+    if (sections.length === 0) return '';
+    return 'Recommendation Resources:\n\n' + sections.join('\n\n');
   }
 
   function buildReport() {
-    const d=formDataObject();
-    const rt=d.reportType||'DOT Employer', cc=d.closingCert||'DOT SAP', rl=d.returnLanguage||'Safety Sensitive';
-    const cn=safe(d.clientName,'EMPLOYEE NAME');
-    const ed=fmtDate(d.evalDate)||'INITIAL EVAL DATE';
-    const vd=fmtDate(d.violationDate||d.positiveTestDate)||'date of violation';
-    const dob=fmtDate(d.dob)||'DOB';
-    const ssn=safe(d.ssn,'Social Security Number');
-    const cas=safe(d.caseNumber,'CASE#');
-    const dn=safe(d.derName,'DER Name'), dc=safe(d.derContact);
-    const co=safe(d.companyName||d.employer,'COMPANY'), ca=safe(d.companyAddress,'COMPANY ADDRESS');
-    const rh=safe(d.recipientHeader,'DISA Global Solutions, Inc.');
-    const ra=safe(d.recipientAttention,'Attn: Return to Duty Department');
-    const tv=safe(d.violationLabel||d.reason||d.reasonNotes,'TYPE OF TEST VIOLATION');
-    const sn=safe(d.sapName,'Joshua Pair'), sc=safe(d.sapCredentials,'M.Ed., LCDC, SAP');
-    const sd=fmtDate(d.sapSigDate)||'DATE';
-    const is=safe(d.instrumentSummary), nt=safe(d.dotReportNote);
-    const edu=parseInt(d.educationHours||'0',10)||0;
-    const peer=parseInt(d.peerGroupCount||'0',10)||0;
-    const cns=parseInt(d.counselingSessions||'0',10)||0;
-    const scr=d.negativeScreenRequired||'Yes';
-    const subs=(Array.isArray(d.identifiedProblem)?d.identifiedProblem:[]).filter(Boolean).join(', ');
-    const end=scr==='Yes'?', and provide an independent negative drug screen.':'.';
-    const recP=`My recommendations are as follows: ${edu} hours of drug and alcohol education, ${peer} peer support groups, ${cns} counseling sessions${end}`;
-    let retP='';
-    if (rl==='Safety Sensitive') retP=`${cn} may be eligible to meet with me for consideration of return to safety-sensitive duties after completion of ${edu} hours of drug and alcohol education, ${peer} peer support groups, ${cns} counseling sessions${end}`;
-    else if (rl==='Return to Duty') retP=`${cn} may be eligible to meet with me for consideration of return to duty after completion of ${edu} hours of drug and alcohol education, ${peer} peer support groups, ${cns} counseling sessions${end}`;
-    const drugLine=subs?`${cn} was evaluated using the MAST/DAST and a clinical interview was performed. Relevant substance(s): ${subs}.`:`${cn} was evaluated using the MAST/DAST and a clinical interview was performed.`;
-    let cert='';
-    if (cc==='DOT SAP') cert=`I certify that I am a DOT-qualified Substance Abuse Professional (SAP) and that I have knowledge of and clinical experience in the diagnosis and treatment of alcohol and controlled substance use and related disorders. As a DOT SAP, I have complied with DOT regulations regarding my evaluation and monitoring of the above-named employee.`;
-    else if (cc==='Independent Provider') cert=`I certify that I am not employed by, nor do I receive remuneration from, nor do I have financial interest in the above named treatment provider program. I certify that I have knowledge of and clinical experience in the diagnosis and treatment of alcohol and controlled substance use and related disorders. I certify that I provided a comprehensive face-to-face assessment and clinical evaluation of this employee.`;
+    const d   = formDataObject();
+    const rt  = d.reportType||'DOT Employer', cc=d.closingCert||'DOT SAP', rl=d.returnLanguage||'Safety Sensitive';
+    const cn  = safe(d.clientName,'EMPLOYEE NAME');
+    const ed  = fmtDate(d.evalDate)||'INITIAL EVAL DATE';
+    const vd  = fmtDate(d.violationDate||d.positiveTestDate)||'date of violation';
+    const dob = fmtDate(d.dob)||'DOB';
+    const ssn = safe(d.ssn,'Social Security Number');
+    const cas = safe(d.caseNumber,'CASE#');
+    const dn  = safe(d.derName,'DER Name'), dc=safe(d.derContact);
+    const co  = safe(d.companyName||d.employer,'COMPANY'), ca=safe(d.companyAddress,'COMPANY ADDRESS');
+    const rh  = safe(d.recipientHeader,'DISA Global Solutions, Inc.');
+    const ra  = safe(d.recipientAttention,'Attn: Return to Duty Department');
+    const tv  = safe(d.violationLabel||d.reason||d.reasonNotes,'TYPE OF TEST VIOLATION');
+    const sn  = safe(d.sapName,'Joshua Pair'), sc=safe(d.sapCredentials,'M.Ed., LCDC, SAP');
+    const sd  = fmtDate(d.sapSigDate)||'DATE';
+    const is  = safe(d.instrumentSummary), nt=safe(d.dotReportNote);
+
+    const edu  = parseInt(d.educationHours||'0',10)||0;
+    const peer = parseInt(d.peerGroupCount||'0',10)||0;
+    const cns  = parseInt(d.counselingSessions||'0',10)||0;
+    const scr  = d.negativeScreenRequired||'Yes';
+    const subs = (Array.isArray(d.identifiedProblem)?d.identifiedProblem:[]).filter(Boolean).join(', ');
+
+    const endPunct = scr==='Yes' ? ', and provide an independent negative drug screen.' : '.';
+    const recP = `My recommendations are as follows: ${edu} hours of drug and alcohol education, ${peer} peer support groups, ${cns} counseling sessions${endPunct}`;
+
+    let retP = '';
+    if (rl==='Safety Sensitive')
+      retP = `${cn} may be eligible to meet with me for consideration of return to safety-sensitive duties after completion of ${edu} hours of drug and alcohol education, ${peer} peer support groups, ${cns} counseling sessions${endPunct}`;
+    else if (rl==='Return to Duty')
+      retP = `${cn} may be eligible to meet with me for consideration of return to duty after completion of ${edu} hours of drug and alcohol education, ${peer} peer support groups, ${cns} counseling sessions${endPunct}`;
+
+    const drugLine = subs
+      ? `${cn} was evaluated using the MAST/DAST and a clinical interview was performed. Relevant substance(s): ${subs}.`
+      : `${cn} was evaluated using the MAST/DAST and a clinical interview was performed.`;
+
+    let cert = '';
+    if (cc==='DOT SAP')
+      cert = `I certify that I am a DOT-qualified Substance Abuse Professional (SAP) and that I have knowledge of and clinical experience in the diagnosis and treatment of alcohol and controlled substance use and related disorders. As a DOT SAP, I have complied with DOT regulations regarding my evaluation and monitoring of the above-named employee.`;
+    else if (cc==='Independent Provider')
+      cert = `I certify that I am not employed by, nor do I receive remuneration from, nor do I have financial interest in the above named treatment provider program. I certify that I have knowledge of and clinical experience in the diagnosis and treatment of alcohol and controlled substance use and related disorders. I certify that I provided a comprehensive face-to-face assessment and clinical evaluation of this employee.`;
+
     let hdr='', addr='', re='', intro='';
     if (rt==='DOT Employer'||rt==='Non-DOT Employer') {
-      addr=`${ed}\n\n${dn}\n${co}\n${ca}`.trim(); if(dc) addr+=`\n${dc}`;
-      re=`RE: ${cn}    DOB: ${dob}\nSS# ${ssn}    CASE#: ${cas}`;
-      intro=rt==='DOT Employer'
-        ?`On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace following a ${tv} on ${vd}. This is a violation of the Department of Transportation's Federal Drug and Alcohol Testing rules.`
-        :`On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace following a ${tv} on ${vd}. This evaluation is due to a violation of your company drug and alcohol policy.`;
+      addr = `${ed}\n\n${dn}\n${co}\n${ca}`.trim(); if(dc) addr += `\n${dc}`;
+      re   = `RE: ${cn}    DOB: ${dob}\nSS# ${ssn}    CASE#: ${cas}`;
+      intro = rt==='DOT Employer'
+        ? `On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace following a ${tv} on ${vd}. This is a violation of the Department of Transportation's Federal Drug and Alcohol Testing rules.`
+        : `On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace following a ${tv} on ${vd}. This evaluation is due to a violation of your company drug and alcohol policy.`;
     }
-    if (rt==='DISA')          { hdr='INITIAL EVALUATION REPORT'; addr=`${ed}\n\n${rh}\n${ra}`; re=`RE: ${cn}\nSS# ${ssn}`; intro=`On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace following a ${tv} on ${vd}. This evaluation is due to a violation of your company drug and alcohol policy.`; }
-    if (rt==='Self Referral') { hdr='INITIAL EVALUATION REPORT'; addr=ed; re=`RE: ${cn}    DOB: ${dob}\nSS# ${ssn}    CASE#: ${cas}`; intro=`On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace for a self-referral involving ${tv}.`; }
-    const secs=[];
-    if(hdr) secs.push(hdr); if(addr) secs.push(addr); if(re) secs.push(re);
-    secs.push(intro,'POSITIVE AND DRUG MUST BE INCLUDED',drugLine,recP);
-    if(retP&&rt!=='Self Referral') secs.push(retP);
-    secs.push(resourceSectionText());
-    if(is) secs.push(`Internal instrument summary:\n${is}`);
-    if(nt) secs.push(`Additional report note:\n${nt}`);
-    if(cert) secs.push(cert);
+    if (rt==='DISA') {
+      hdr='INITIAL EVALUATION REPORT';
+      addr=`${ed}\n\n${rh}\n${ra}`;
+      re=`RE: ${cn}\nSS# ${ssn}`;
+      intro=`On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace following a ${tv} on ${vd}. This evaluation is due to a violation of your company drug and alcohol policy.`;
+    }
+    if (rt==='Self Referral') {
+      hdr='INITIAL EVALUATION REPORT';
+      addr=ed;
+      re=`RE: ${cn}    DOB: ${dob}\nSS# ${ssn}    CASE#: ${cas}`;
+      intro=`On ${ed} I assessed ${cn} face-to-face remotely using Google Workspace for a self-referral involving ${tv}.`;
+    }
+
+    const secs = [];
+    if (hdr)  secs.push(hdr);
+    if (addr) secs.push(addr);
+    if (re)   secs.push(re);
+    secs.push(intro);
+    secs.push('POSITIVE AND DRUG MUST BE INCLUDED');
+    secs.push(drugLine);
+    secs.push(recP);
+    if (retP && rt!=='Self Referral') secs.push(retP);
+
+    const resourceText = resourceSectionText(edu, peer, cns);
+    if (resourceText) secs.push(resourceText);
+
+    if (is) secs.push(`Internal instrument summary:\n${is}`);
+    if (nt) secs.push(`Additional report note:\n${nt}`);
+    if (cert) secs.push(cert);
     secs.push(`Should you have any questions, please contact me at 903.445.8953.\n\nName: ${sn}, ${sc}\n\nSignature:\nDate: ${sd}`);
+
     document.getElementById('reportPreview').textContent = secs.join('\n\n');
   }
 
   async function saveToSheets() {
-    if (!SCRIPT_URL||SCRIPT_URL==='https://script.google.com/macros/s/AKfycbwS4yzK4DA96PBkqXddLSZHytYmUXv-W-NZKCIrVbTmdjbshY8cWfJGRjZqO0AZ3cSgeQ/exec') { setStatus('⚠️ Add your Apps Script URL to SCRIPT_URL first.',true); return; }
-    const btn=document.getElementById('sheetsBtn'); btn.disabled=true; setStatus('Saving to Google Sheets…');
+    const btn = document.getElementById('sheetsBtn'); btn.disabled=true; setStatus('Saving to Google Sheets…');
     calculateAll(); buildReport();
-    const d=formDataObject();
-    d.mastScore=document.getElementById('mastScore').textContent;
-    d.mastInterpretation=document.getElementById('mastInterpretation').textContent;
-    d.dastScore=document.getElementById('dastScore').textContent;
-    d.dastInterpretation=document.getElementById('dastInterpretation').textContent;
-    d.reportText=document.getElementById('reportPreview').textContent;
-    const ma={}; MAST_ITEMS.forEach(i=>{ma[i.n]=getRadioValue(`mast_${i.n}`);}); d.mastAnswers=ma;
-    const da={}; DAST_ITEMS.forEach(i=>{da[i.n]=getRadioValue(`dast_${i.n}`);}); d.dastAnswers=da;
+    const d = formDataObject();
+    d.mastScore          = document.getElementById('mastScore').textContent;
+    d.mastInterpretation = document.getElementById('mastInterpretation').textContent;
+    d.dastScore          = document.getElementById('dastScore').textContent;
+    d.dastInterpretation = document.getElementById('dastInterpretation').textContent;
+    d.reportText         = document.getElementById('reportPreview').textContent;
+    const ma={}, da={};
+    MAST_ITEMS.forEach(i=>{ma[i.n]=getRadioValue(`mast_${i.n}`);});
+    DAST_ITEMS.forEach(i=>{da[i.n]=getRadioValue(`dast_${i.n}`);});
+    d.mastAnswers=ma; d.dastAnswers=da;
     try {
-      const res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'saveSapEvaluation',payload:d})});
-      const json=await res.json();
-      if(json.ok) setStatus('✓ Saved to Google Sheets! ID: '+(json.result?.id||'ok'));
+      const res  = await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'saveSapEvaluation',payload:d})});
+      const json = await res.json();
+      if (json.ok) setStatus('✓ Saved to Google Sheets! ID: '+(json.result?.id||'ok'));
       else setStatus('Error: '+(json.error||'Unknown error'),true);
     } catch(err) { setStatus('Save failed: '+err.message,true); }
     finally { btn.disabled=false; }
   }
 
   function saveDraft() {
-    const data=formDataObject();
+    const data = formDataObject();
     MAST_ITEMS.forEach(i=>{data[`mast_${i.n}`]=getRadioValue(`mast_${i.n}`);});
     DAST_ITEMS.forEach(i=>{data[`dast_${i.n}`]=getRadioValue(`dast_${i.n}`);});
-    data.sapSignatureData=document.getElementById('sapSignature').toDataURL('image/png');
+    data.sapSignatureData = document.getElementById('sapSignature').toDataURL('image/png');
     localStorage.setItem('arsSapStandaloneDraft',JSON.stringify(data));
     setStatus('Draft saved locally in this browser.');
   }
   function loadDraft() {
-    const raw=localStorage.getItem('arsSapStandaloneDraft');
-    if(!raw){setStatus('No saved draft found.');return;}
-    const data=JSON.parse(raw);
-    Object.keys(data).forEach(key=>{
-      const fields=document.querySelectorAll(`[name="${key}"]`); if(!fields.length) return;
-      fields.forEach(f=>{
-        if(f.type==='checkbox'){const arr=Array.isArray(data[key])?data[key]:[data[key]];f.checked=arr.includes(f.value);}
-        else if(f.type==='radio'){f.checked=f.value===data[key];}
-        else{f.value=data[key];}
+    const raw = localStorage.getItem('arsSapStandaloneDraft');
+    if (!raw) { setStatus('No saved draft found.'); return; }
+    const data = JSON.parse(raw);
+    Object.keys(data).forEach(key => {
+      const fields = document.querySelectorAll(`[name="${key}"]`); if(!fields.length) return;
+      fields.forEach(f => {
+        if (f.type==='checkbox')   { const arr=Array.isArray(data[key])?data[key]:[data[key]]; f.checked=arr.includes(f.value); }
+        else if (f.type==='radio') { f.checked = f.value===data[key]; }
+        else                       { f.value = data[key]; }
       });
     });
-    if(data.sapSignatureData) drawImageOnPad('sapSignature',data.sapSignatureData);
+    if (data.sapSignatureData) drawImageOnPad('sapSignature',data.sapSignatureData);
     syncRecommendationSummary(); calculateAll(); buildReport();
     setStatus('Saved draft loaded.');
   }
   function clearDraft() { localStorage.removeItem('arsSapStandaloneDraft'); setStatus('Saved draft cleared.'); }
 
   function initPad(id) {
-    const canvas=document.getElementById(id); if(!canvas) return;
-    const ctx=canvas.getContext('2d'); let drawing=false,lx=0,ly=0;
-    function resize(){
-      const r=window.devicePixelRatio||1,cur=canvas.toDataURL('image/png');
+    const canvas = document.getElementById(id); if(!canvas) return;
+    const ctx = canvas.getContext('2d'); let drawing=false,lx=0,ly=0;
+    function resize() {
+      const r=window.devicePixelRatio||1, cur=canvas.toDataURL('image/png');
       canvas.width=canvas.offsetWidth*r; canvas.height=canvas.offsetHeight*r;
       ctx.setTransform(1,0,0,1,0,0); ctx.scale(r,r);
-      ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111827';
+      ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111111';
       if(cur&&cur!=='data:,') drawImageOnPad(id,cur);
     }
-    function pt(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
+    function pt(e){ const r=canvas.getBoundingClientRect(); return{x:e.clientX-r.left,y:e.clientY-r.top}; }
     canvas.style.touchAction='none';
-    canvas.addEventListener('pointerdown',e=>{drawing=true;const p=pt(e);lx=p.x;ly=p.y;});
-    canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const p=pt(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;});
-    canvas.addEventListener('pointerup',()=>{drawing=false;});
-    canvas.addEventListener('pointerleave',()=>{drawing=false;});
+    canvas.addEventListener('pointerdown',  e=>{drawing=true;const p=pt(e);lx=p.x;ly=p.y;});
+    canvas.addEventListener('pointermove',  e=>{if(!drawing)return;e.preventDefault();const p=pt(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;});
+    canvas.addEventListener('pointerup',    ()=>{drawing=false;});
+    canvas.addEventListener('pointerleave', ()=>{drawing=false;});
     canvas.addEventListener('pointercancel',()=>{drawing=false;});
     resize(); window.addEventListener('resize',resize);
   }
-  function clearPad(id){const c=document.getElementById(id);c.getContext('2d').clearRect(0,0,c.width,c.height);}
+  function clearPad(id){ const c=document.getElementById(id); c.getContext('2d').clearRect(0,0,c.width,c.height); }
   function drawImageOnPad(id,url){
     const c=document.getElementById(id),ctx=c.getContext('2d'),img=new Image();
     img.onload=()=>{ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width/(window.devicePixelRatio||1),c.height/(window.devicePixelRatio||1));};
     img.src=url;
   }
 
-  document.addEventListener('DOMContentLoaded',()=>{
+  document.addEventListener('DOMContentLoaded', () => {
     buildTables(); initPad('sapSignature');
-    const rb=document.querySelector('[name="sapRecommendation"]');
-    rb.dataset.userEdited='false';
-    rb.addEventListener('input',()=>{rb.dataset.userEdited=rb.value.trim()?'true':'false';});
+    const rb = document.querySelector('[name="sapRecommendation"]');
+    rb.dataset.userEdited = 'false';
+    rb.addEventListener('input', ()=>{ rb.dataset.userEdited = rb.value.trim() ? 'true' : 'false'; });
     syncRecommendationSummary(); calculateAll(); buildReport();
   });
 </script>
