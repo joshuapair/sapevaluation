@@ -618,7 +618,7 @@ Counseling
   }
 
   async function saveToSheets() {
-    if (!SCRIPT_URL||SCRIPT_URL==='PASTE_YOUR_APPS_SCRIPT_URL_HERE') { setStatus('⚠️ Add your Apps Script URL to SCRIPT_URL first.',true); return; }
+    if (!SCRIPT_URL||SCRIPT_URL==='https://script.google.com/macros/s/AKfycbwS4yzK4DA96PBkqXddLSZHytYmUXv-W-NZKCIrVbTmdjbshY8cWfJGRjZqO0AZ3cSgeQ/exec') { setStatus('⚠️ Add your Apps Script URL to SCRIPT_URL first.',true); return; }
     const btn=document.getElementById('sheetsBtn'); btn.disabled=true; setStatus('Saving to Google Sheets…');
     calculateAll(); buildReport();
     const d=formDataObject();
